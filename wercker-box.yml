@@ -19,7 +19,7 @@ script: |
   sudo make install
   cd ..
 
-  apt-get install mongodb-10gen=2.4.6
+  sudo apt-get install mongodb-10gen=2.4.6
 
   curl -O http://geolite.maxmind.com/download/geoip/api/c/GeoIP-1.4.8.tar.gz
   tar -xvzf GeoIP-1.4.8.tar.gz
