@@ -1,0 +1,19 @@
+name: rundsp
+version: 0.0.1
+inherits: wercker/ubuntu12.04-ruby2.0.0@1.0.0
+type: service
+platform: ubuntu@12.04
+description: Ruby 2, GeoIP
+keywords:
+  - ruby
+  - geoip
+packages:
+script: |
+  sudo apt-get update
+
+  curl -O http://geolite.maxmind.com/download/geoip/api/c/GeoIP-1.4.8.tar.gz
+  tar -xvzf GeoIP-1.4.8.tar.gz
+  cd GeoIP-1.4.8
+  ./configure --prefix=/usr
+  make
+  sudo make install
