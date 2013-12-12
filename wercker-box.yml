@@ -1,14 +1,25 @@
 name: rundsp
-version: 0.0.1
+version: 0.0.2
 inherits: wercker/ubuntu12.04-ruby2.0.0@1.0.0
 type: service
 platform: ubuntu@12.04
-description: Ruby 2, GeoIP
+description: Ruby 2, Mongo 2.4.6, Redis 2.6.16, GeoIP
 keywords:
   - ruby
   - geoip
+  - redis
+  - mongo
 script: |
   sudo apt-get update
+
+  curl -O http://download.redis.io/releases/redis-2.6.16.tar.gz
+  tar xvf redis-2.6.16.tar.gz
+  cd redis-2.6.16
+  make
+  sudo make install
+  cd ..
+
+  apt-get install mongodb-10gen=2.4.6
 
   curl -O http://geolite.maxmind.com/download/geoip/api/c/GeoIP-1.4.8.tar.gz
   tar -xvzf GeoIP-1.4.8.tar.gz
@@ -16,3 +27,4 @@ script: |
   ./configure --prefix=/usr
   make
   sudo make install
+  cd ..
