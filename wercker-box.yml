@@ -14,7 +14,8 @@ script: |
   echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" | sudo tee -a /etc/apt/sources.list.d/10gen.list
   sudo apt-get -y update
 
-  sudo apt-get install -f mongodb-10gen=2.4.6
+  sudo apt-get remove mongodb mongodb-clients
+  sudo apt-get install mongodb-10gen=2.4.6
 
   curl -O http://download.redis.io/releases/redis-2.6.16.tar.gz
   tar xvf redis-2.6.16.tar.gz
