@@ -1,9 +1,9 @@
 name: rundsp
-version: 0.0.2
+version: 0.0.3
 inherits: wercker/ubuntu12.04-ruby2.0.0@1.0.0
 type: service
 platform: ubuntu@12.04
-description: Ruby 2, Mongo 2.4.6, Redis 2.6.16, GeoIP
+description: Ruby 2, Mongo 2.4.6, Redis 2.6.16, GeoIP, GEOS CAPI
 keywords:
   - ruby
   - geoip
@@ -16,6 +16,15 @@ script: |
 
   sudo apt-get remove mongodb mongodb-clients
   sudo apt-get install mongodb-10gen=2.4.6
+
+  curl -O http://download.osgeo.org/geos/geos-3.4.2.tar.bz2
+  tar xvf geos-3.4.2.tar.bz2
+  cd geos-3.4.2
+  ./autogen.sh
+  ./configure
+  make
+  sudo make install
+  cd ..
 
   curl -O http://download.redis.io/releases/redis-2.6.16.tar.gz
   tar xvf redis-2.6.16.tar.gz
