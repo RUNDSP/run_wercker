@@ -10,7 +10,11 @@ keywords:
   - redis
   - mongo
 script: |
-  sudo apt-get update
+  apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+  echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" | tee -a /etc/apt/sources.list.d/10gen.list
+  apt-get -y update
+
+  sudo apt-get install mongodb-10gen=2.4.6
 
   curl -O http://download.redis.io/releases/redis-2.6.16.tar.gz
   tar xvf redis-2.6.16.tar.gz
@@ -18,8 +22,6 @@ script: |
   make
   sudo make install
   cd ..
-
-  sudo apt-get install mongodb-10gen=2.4.6
 
   curl -O http://geolite.maxmind.com/download/geoip/api/c/GeoIP-1.4.8.tar.gz
   tar -xvzf GeoIP-1.4.8.tar.gz
