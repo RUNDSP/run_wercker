@@ -1,41 +1,54 @@
 name: rundsp
-version: 0.0.3
+version: 0.0.4
 inherits: wercker/ubuntu12.04-ruby2.0.0@1.0.0
 type: service
 platform: ubuntu@12.04
-description: Ruby 2, Mongo 2.4.6, Redis 2.6.16, GeoIP, GEOS CAPI
+description: Ruby 2, Mongo 2.4.6, Redis 2.6.16, GeoIP, GEOS CAPI, Firefox, xvfb, Elastic Search 1.0.0Beta2
 keywords:
-  - ruby
-  - geoip
-  - redis
-  - mongo
+    - ruby
+    - geoip
+    - redis
+    - mongo
+    - firefox
+    - xvfb
 script: |
-  sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
-  echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" | sudo tee -a /etc/apt/sources.list.d/10gen.list
-  sudo apt-get -y update
-
-  sudo apt-get remove mongodb mongodb-clients
-  sudo apt-get install mongodb-10gen=2.4.6
-
-  curl -O http://download.osgeo.org/geos/geos-3.4.2.tar.bz2
-  tar xvf geos-3.4.2.tar.bz2
-  cd geos-3.4.2
-  ./configure
-  make
-  sudo make install
-  cd ..
-
-  curl -O http://download.redis.io/releases/redis-2.6.16.tar.gz
-  tar xvf redis-2.6.16.tar.gz
-  cd redis-2.6.16
-  make
-  sudo make install
-  cd ..
-
-  curl -O http://geolite.maxmind.com/download/geoip/api/c/GeoIP-1.4.8.tar.gz
-  tar -xvzf GeoIP-1.4.8.tar.gz
-  cd GeoIP-1.4.8
-  ./configure --prefix=/usr
-  make
-  sudo make install
-  cd ..
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+    echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" | sudo tee -a /etc/apt/sources.list.d/10gen.list
+    sudo apt-get -y update
+    
+    sudo apt-get remove mongodb mongodb-clients
+    sudo apt-get install firefox build-essential nodejs mongodb-10gen=2.4.6 libfreetype6-dev libfontconfig1-dev xvfb x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps
+    
+    sudo wget -O /tmp/elasticsearch-1.0.0Beta2.deb https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.0.0.Beta2.deb
+    sudo dpkg -i /tmp/elasticsearch-1.0.0Beta2.deb
+    
+    curl -O http://download.osgeo.org/geos/geos-3.4.2.tar.bz2
+    tar xvf geos-3.4.2.tar.bz2
+    cd geos-3.4.2
+    ./configure
+    make
+    sudo make install
+    cd ..
+    
+    curl -O http://download.redis.io/releases/redis-2.6.16.tar.gz
+    tar xvf redis-2.6.16.tar.gz
+    cd redis-2.6.16 
+    make
+    sudo make install
+    cd ..
+    
+    curl -O http://geolite.maxmind.com/download/geoip/api/c/GeoIP-1.4.8.tar.gz
+    tar -xvzf GeoIP-1.4.8.tar.gz
+    cd GeoIP-1.4.8
+    ./configure --prefix=/usr
+    make
+    sudo make install
+    cd ..
+env:
+    DISPLAY: ":99.0"
+init-script: |
+    sudo sed -i 's/# http.enabled: false/http.enabled: true/g' /etc/elasticsearch/elasticsearch.yml
+    sudo sed -i 's/# network.host: 192.168.0.1/network.host: $$HOST$$/g' /etc/elasticsearch/elasticsearch.yml
+    cat /etc/elasticsearch/elasticsearch.yml
+    sudo /etc/init.d/elasticsearch restart
+    sudo /etc/init.d/elasticsearch restart
