@@ -22,6 +22,9 @@ script: |
     sudo wget -O /tmp/elasticsearch-1.0.0Beta2.deb https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.0.0.Beta2.deb
     sudo dpkg -i /tmp/elasticsearch-1.0.0Beta2.deb
     
+    sudo sed -i 's/# http.enabled: false/http.enabled: true/g' /etc/elasticsearch/elasticsearch.yml
+    sudo sed -i 's/# network.host: 192.168.0.1/network.host: $$HOST$$/g' /etc/elasticsearch/elasticsearch.yml
+
     curl -O http://download.osgeo.org/geos/geos-3.4.2.tar.bz2
     tar xvf geos-3.4.2.tar.bz2
     cd geos-3.4.2
@@ -46,9 +49,12 @@ script: |
     cd ..
 env:
     DISPLAY: ":99.0"
+    WERCKER_ELASTICSEARCH_PORT: 9200
+    WERCKER_ELASTICSEARCH_HOST: $$HOST$$
+    WERCKER_ELASTICSEARCH_URL: $$HOST$$:9200
+    WERCKER_ELASTICSEARCH_VERSION: 1.0.0Beta2
 init-script: |
     sudo sed -i 's/# http.enabled: false/http.enabled: true/g' /etc/elasticsearch/elasticsearch.yml
     sudo sed -i 's/# network.host: 192.168.0.1/network.host: $$HOST$$/g' /etc/elasticsearch/elasticsearch.yml
     cat /etc/elasticsearch/elasticsearch.yml
-    sudo /etc/init.d/elasticsearch restart
     sudo /etc/init.d/elasticsearch restart
