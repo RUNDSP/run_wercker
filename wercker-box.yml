@@ -23,7 +23,7 @@ script: |
     sudo dpkg -i /tmp/elasticsearch-1.3.2.deb
     
     sudo sed -i 's/#http.enabled: false/http.enabled: true/g' /etc/elasticsearch/elasticsearch.yml
-    sudo sed -i 's/#network.host: 192.168.0.1/network.host: 0.0.0.0/g' /etc/elasticsearch/elasticsearch.yml
+    sudo sed -i 's/#network.host: 192.168.0.1/network.host: $$HOST$$/g' /etc/elasticsearch/elasticsearch.yml
     sudo sed -i 's/#http.jsonp.enable: true/script.disable_dynamic: false/g' /etc/elasticsearch/elasticsearch.yml
 
     sudo apt-get install -y openjdk-7-jre
@@ -57,7 +57,7 @@ env:
     WERCKER_ELASTICSEARCH_PORT: 9200
     WERCKER_ELASTICSEARCH_HOST: $$HOST$$
     WERCKER_ELASTICSEARCH_URL: $$HOST$$:9200
-    WERCKER_ELASTICSEARCH_VERSION: 1.0.0Beta2
+    WERCKER_ELASTICSEARCH_VERSION: 1.3.2
 init-script: |
     sudo sed -i 's/# http.enabled: false/http.enabled: true/g' /etc/elasticsearch/elasticsearch.yml
     sudo sed -i 's/# network.host: 192.168.0.1/network.host: $$HOST$$/g' /etc/elasticsearch/elasticsearch.yml
