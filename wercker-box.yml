@@ -15,13 +15,13 @@ script: |
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
     echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
     sudo apt-get update
-    
+
     sudo apt-get remove mongodb mongodb-clients
     sudo apt-get install firefox build-essential nodejs mongodb-org=2.6.1 mongodb-org-server=2.6.1 mongodb-org-shell=2.6.1 mongodb-org-mongos=2.6.1 mongodb-org-tools=2.6.1 libfreetype6-dev libfontconfig1-dev xvfb x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps
-    
+
     sudo wget -O /tmp/elasticsearch-1.3.2.deb https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.3.2.deb
     sudo dpkg -i /tmp/elasticsearch-1.3.2.deb
-    
+
     sudo sed -i 's/#http.enabled: false/http.enabled: true/g' /etc/elasticsearch/elasticsearch.yml
     sudo sed -i 's/#network.host: 192.168.0.1/network.host: $$HOST$$/g' /etc/elasticsearch/elasticsearch.yml
     sudo sed -i 's/#http.jsonp.enable: true/script.disable_dynamic: false/g' /etc/elasticsearch/elasticsearch.yml
@@ -37,14 +37,14 @@ script: |
     make
     sudo make install
     cd ..
-    
+
     curl -O http://download.redis.io/releases/redis-2.6.16.tar.gz
     tar xvf redis-2.6.16.tar.gz
-    cd redis-2.6.16 
+    cd redis-2.6.16
     make
     sudo make install
     cd ..
-    
+
     curl -O http://geolite.maxmind.com/download/geoip/api/c/GeoIP-1.4.8.tar.gz
     tar -xvzf GeoIP-1.4.8.tar.gz
     cd GeoIP-1.4.8
@@ -54,7 +54,7 @@ script: |
     cd ..
 
     sudo apt-get install -y libpq-dev postgresql
-    sudo -u postgres createuser --superuser $WERCKER_REDSHIFT_USER
+    sudo -u postgres createuser --superuser --no-password $WERCKER_REDSHIFT_USER
     sudo -u postgres psql -U postgres -d postgres -c "alter user $WERCKER_REDSHIFT_USER with password '$WERCKER_REDSHIFT_PASSWORD';"
     sudo -u postgres createdb $WERCKER_REDSHIFT_DB
 env:
